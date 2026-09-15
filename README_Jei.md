@@ -14,7 +14,7 @@
 
 ---
 
-##  1. `CameraOrbit.cs`
+##  1. `CameraOrbit`
 
 ##  2. `NPCSensor`
 
