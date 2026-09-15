@@ -50,3 +50,12 @@ public class CameraTargetFollow : MonoBehaviour
    transform.position = player.position + Vector3.up * 1.5f;
    ```
    Posisi kamera disesuaikan dengan posisi player ditambah offset `1.5` unit ke arah atas (`Vector3.up`).
+
+---
+
+### Demo / Tampilan Hasil
+*(Tambahkan Screenshot atau GIF animasi kamera mengikuti player di sini)*  
+`![Demo Camera Follow](docs/images/camera_follow_demo.gif)`
+
+---
+
