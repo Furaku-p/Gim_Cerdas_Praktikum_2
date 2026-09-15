@@ -22,8 +22,6 @@ Script ini berfungsi untuk mengontrol pergerakan kamera utama agar selalu mengik
 |---|---|---|---|
 | `player` | `Transform` | `public` | Referensi komponen `Transform` milik objek Player yang akan diikuti |
 
----
-
 ### <ins> Kode </ins>
 ```csharp
 using UnityEngine;
@@ -41,8 +39,6 @@ public class CameraTargetFollow : MonoBehaviour
 }
 ```
 
----
-
 ### <ins> Penjelasan Kode </ins>
 1. **Menggunakan `LateUpdate()`**: Dipanggil setiap frame setelah seluruh method `Update()` selesai dieksekusi. Hal ini menjamin posisi kamera diperbarui setelah posisi player dipastikan selesai berpindah, mencegah terjadinya efek *jittering* atau gerakan patah-patah pada kamera.
 2. **Kalkulasi Posisi Kamera**:
@@ -50,8 +46,6 @@ public class CameraTargetFollow : MonoBehaviour
    transform.position = player.position + Vector3.up * 1.5f;
    ```
    Posisi kamera disesuaikan dengan posisi player ditambah offset `1.5` unit ke arah atas (`Vector3.up`).
-
----
 
 ## 2. `NPCBrain`
 Script ini merupakan otak pengendali utama kecerdasan buatan (AI) NPC Guard. Script ini menangani sensor, pengambilan keputusan, serta eksekusi aksi pergerakan NPC.
@@ -73,8 +67,6 @@ Script ini merupakan otak pengendali utama kecerdasan buatan (AI) NPC Guard. Scr
 | `alertQuestion` | `GameObject` | `private` | **(Challenge 3)** Objek UI tanda tanya (`?`) saat mencari (*Search*) |
 | `currentState` | `NPCState` | `private` | Status FSM NPC saat ini (`Patrol`, `Chase`, `Search`) |
 
----
-
 ### <ins> 2.1 Overview State NPC </ins>
 NPC Guard memiliki 3 status utama (`NPCState`):
 - **Patrol**: NPC mengitari rute titik patroli (*waypoint*) secara berurutan.
@@ -91,8 +83,6 @@ NPC Guard memiliki 3 status utama (`NPCState`):
                  └───────│  SEARCH  │◄────────────┘
      [Search Selesai]    └──────────┘
 ```
-
----
 
 ### <ins> 2.2 Inisialisasi & Loop Utama </ins>
 Method `Start()` menginisialisasi state awal ke `Patrol` dan mengarahkan NPC ke titik patroli pertama.  
@@ -115,8 +105,6 @@ private void Update()
 }
 ```
 
----
-
 ### <ins> 2.3 Sistem Sensor & Memori </ins>
 NPC memperbarui koordinat posisi terakhir player (`lastKnownPosition`) berdasarkan dua sensor:
 1. **Penglihatan (`sensor.CanSeePlayer`)**: Menyimpan posisi player saat terlihat.
@@ -138,8 +126,6 @@ private void UpdateMemory()
     }
 }
 ```
-
----
 
 ### <ins> 2.4 Logika Pengambilan Keputusan </ins>
 Proses pengambilan keputusan dievaluasi berdasarkan urutan prioritas:
@@ -180,8 +166,6 @@ private void MakeDecision()
 ```
 
 Fungsi `ChangeState()` menangani perubahan state, mencetak log ke console, dan memanggil `GoToCurrentPatrolPoint()` saat kembali ke `Patrol`.
-
----
 
 ### <ins> 2.5 Eksekusi Perilaku State & Challenge </ins>
 
@@ -257,8 +241,6 @@ private void Search()
 }
 ```
 
----
-
 ### <ins> 2.6 Indikator Alert (Challenge 3) </ins>
 Fungsi `UpdateIndicators()` mengatur aktif/tidaknya ikon indikator visual di atas kepala NPC:
 - `alertExclamation` (`!`): Aktif hanya saat state **`Chase`**.
@@ -274,8 +256,6 @@ private void UpdateIndicators()
         alertQuestion.SetActive(currentState == NPCState.Search);
 }
 ```
-
----
 
 ### <ins> 2.7 Gizmos </ins>
 Method `OnDrawGizmosSelected()` menggambar indikator lingkaran berwarna pada Scene View Unity sesuai state aktif:
@@ -303,8 +283,6 @@ private void OnDrawGizmosSelected()
     }
 }
 ```
-
----
 
 ### <ins> 2.8 Kode Lengkap </ins>
 
