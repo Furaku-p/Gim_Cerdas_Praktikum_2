@@ -40,14 +40,25 @@ private void Start()
 }
 ```
 Fungsi Start() dijalankan ketika permainan dimulai. Pada bagian ini, rotasi awal target diambil menggunakan target.eulerAngles, kemudian disimpan ke rotX dan rotY sehingga rotasi kamera dapat dimulai dari orientasi awal objek, bukan langsung dari sudut 0°.
+
 ```
 private void LateUpdate()
 {
     if (Input.GetMouseButton(1))
     {
-        float mouseX = Input.GetAxis("Mouse X");
-        float mouseY = Input.GetAxis("Mouse Y");
+    float mouseX = Input.GetAxis("Mouse X");
+    float mouseY = Input.GetAxis("Mouse Y");
+
+    rotY += mouseX * mouseSensitivity;
+    rotX -= mouseY * mouseSensitivity;
+
+    rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
+
+    target.rotation = Quaternion.Euler(rotX, rotY, 0f);
+    }
+}
 ```
+LateUpdate() dijalankan setiap frame dan digunakan untuk memperbarui rotasi kamera. Input.GetMouseButton(1) memeriksa apakah tombol mouse kanan sedang ditekan. Jika iya, pergerakan mouse dibaca dengan Mouse X untuk pergerakan horizontal dan Mouse Y untuk pergerakan vertikal. rotY bertambah atau berkurang berdasarkan gerakan mouse horizontal, sehingga kamera dapat berputar ke kiri dan kanan, sedangkan rotX berubah berdasarkan gerakan mouse vertikal, sehingga kamera dapat melihat ke atas dan bawah. Mathf.Clamp() digunakan untuk membatasi nilai rotasi rotX agar berada dalam rentang tertentu (mencegah kamera berputar terlalu jauh ke atas atau ke bawah). Quaternion.Euler() mengubah sudut rotasi Euler pada sumbu X, Y, dan Z menjadi Quaternion yang digunakan Unity untuk merepresentasikan rotasi objek sehingga orientasi target diperbarui sesuai input mouse.
 
 ##  2. `NPCSensor`
 
