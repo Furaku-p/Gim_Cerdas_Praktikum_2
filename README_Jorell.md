@@ -53,12 +53,6 @@ public class CameraTargetFollow : MonoBehaviour
 
 ---
 
-### <ins> Demo / Tampilan Hasil </ins>
-*(Tambahkan Screenshot atau GIF animasi kamera mengikuti player di sini)*  
-`![Demo Camera Follow](docs/images/camera_follow_demo.gif)`
-
----
-
 ## 2. `NPCBrain`
 Script ini merupakan otak pengendali utama kecerdasan buatan (AI) NPC Guard. Script ini menangani sensor, pengambilan keputusan, serta eksekusi aksi pergerakan NPC.
 
@@ -535,9 +529,3 @@ public class NPCBrain : MonoBehaviour
 }
 ```
 </details>
-
----
-
-### <ins> Demo / Tampilan Hasil </ins>
-*(Tambahkan Screenshot atau GIF animasi pergerakan FSM NPC Guard di sini)*  
-`![Demo NPC FSM](docs/images/npc_guard_demo.gif)`
