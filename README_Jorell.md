@@ -34,6 +34,8 @@ public class CameraTargetFollow : MonoBehaviour
 }
 ```
 
+---
+
 ### Penjelasan Kode
 1. **Menggunakan `LateUpdate()`**: Dipanggil setiap frame setelah seluruh method `Update()` selesai dieksekusi. Hal ini menjamin posisi kamera diperbarui setelah posisi player dipastikan selesai berpindah, mencegah terjadinya efek *jittering* atau gerakan patah-patah pada kamera.
 2. **Kalkulasi Posisi Kamera**:
