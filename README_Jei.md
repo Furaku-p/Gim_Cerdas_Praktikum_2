@@ -15,6 +15,22 @@
 ---
 
 ##  1. `CameraOrbit`
+```
+public class CameraOrbit : MonoBehaviour
+{
+    public Transform target;
+
+    public float mouseSensitivity = 3f;
+    public float clampAngle = 70f;
+
+    private float rotX;
+    private float rotY;
+```
+Definisi variabel yang digunakan untuk mengatur rotasi kamera:
+- target: Referensi Transform objek yang akan diputar.
+- mouseSensitivity: Menentukan sensitivitas pergerakan mouse terhadap rotasi kamera.
+- clampAngle: Menentukan batas rotasi vertikal kamera.
+- rotX dan rotY: Menyimpan sudut rotasi pada sumbu X dan Y.
 
 ##  2. `NPCSensor`
 
