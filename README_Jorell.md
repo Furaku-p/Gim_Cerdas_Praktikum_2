@@ -54,18 +54,18 @@ Script ini merupakan otak pengendali utama kecerdasan buatan (AI) NPC Guard. Scr
 | Nama Variabel | Tipe Data | Akses | Deskripsi |
 |---|---|---|---|
 | `sensor` | `NPCSensor` | `private` | Referensi komponen sensor penglihatan dan pendengaran NPC |
-| `agent` | `NavMeshAgent` | `private` | Referensi komponen NavMeshAgent untuk navigasi patfinding |
-| `patrolPoints` | `Transform[]` | `private` | Array titik-titik lokasi *waypoint* patroli |
+| `agent` | `NavMeshAgent` | `private` | Referensi komponen NavMeshAgent untuk navigasi pathfinding |
+| `patrolPoints` | `Transform[]` | `private` | Array titik-titik lokasi *waypoint* patrol |
 | `waypointTolerance` | `float` | `private` | Jarak toleransi pencapaian titik *waypoint* (`0.7f`) |
-| `patrolSpeed` | `float` | `private` | Kecepatan gerak NPC saat kondisi patroli (`2f`) |
+| `patrolSpeed` | `float` | `private` | Kecepatan gerak NPC saat kondisi *Patrol* (`2f`) |
 | `chaseSpeed` | `float` | `private` | Kecepatan gerak NPC saat mengejar player (`4f`) |
 | `searchDuration` | `float` | `private` | Durasi waktu pencarian saat kondisi *Search* (`4f`) |
 | `searchTolerance` | `float` | `private` | Toleransi jarak pencapaian titik pencarian terakhir (`0.8f`) |
 | `waitTimeAtWaypoint` | `float` | `private` | **(Challenge 1)** Waktu jeda tunggu di tiap titik *waypoint* (`2f`) |
 | `searchRotationSpeed` | `float` | `private` | **(Challenge 2)** Kecepatan rotasi geleng kepala saat *Search* (`90f`) |
-| `alertExclamation` | `GameObject` | `private` | **(Challenge 3)** Objek UI tanda seru (`!`) saat mengejar (*Chase*) |
-| `alertQuestion` | `GameObject` | `private` | **(Challenge 3)** Objek UI tanda tanya (`?`) saat mencari (*Search*) |
-| `currentState` | `NPCState` | `private` | Status FSM NPC saat ini (`Patrol`, `Chase`, `Search`) |
+| `alertExclamation` | `GameObject` | `private` | **(Challenge 3)** Objek UI tanda seru (`!`) saat *Chase* |
+| `alertQuestion` | `GameObject` | `private` | **(Challenge 3)** Objek UI tanda tanya (`?`) saat *Search* |
+| `currentState` | `NPCState` | `private` | Status NPC saat ini (`Patrol`, `Chase`, `Search`) |
 
 ### <ins> 2.1 Kode Lengkap </ins>
 
