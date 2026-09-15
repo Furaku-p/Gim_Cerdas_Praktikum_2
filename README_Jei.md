@@ -160,9 +160,199 @@ float rayDistance =
 Menentukan posisi mata NPC dan posisi target pada pemain. 
 - eyePosition: Posisi NPC ditambah ketinggian mata 1.2 unit.
 - targetPosition: Posisi pemain ditambah 0.5 unit, sehingga pengecekan diarahkan ke bagian tubuh pemain, bukan hanya ke titik kaki.
-rayDirection menunjukkan arah dari mata NPC menuju pemain, sedangkan rayDistance menyimpan jarak antara kedua titik tersebut.
+- rayDirection menunjukkan arah dari mata NPC menuju pemain, sedangkan rayDistance menyimpan jarak antara kedua titik tersebut.
+  
+```
+if (Physics.Raycast(
+    eyePosition,
+    rayDirection.normalized,
+    rayDistance,
+    obstacleMask))
+{
+    return;
+}
+
+CanSeePlayer = true;
+```
+Physics.Raycast() menembakkan sinar dari posisi mata NPC menuju pemain untuk memeriksa apakah terdapat objek penghalang pada layer yang ditentukan oleh obstacleMask. Jika raycast mengenai penghalang, fungsi berhenti dan pemain tidak terdeteksi. Jika tidak ada penghalang, CanSeePlayer diatur menjadi true.
+
+```
+private void DetectSound()
+{
+    CanHearPlayer = false;
+
+    if (player == null)
+        return;
+
+    PlayerController playerController =
+        player.GetComponent<PlayerController>();
+
+    if (playerController == null)
+        return;
+
+    if (playerController.IsCrouching)
+        return;
+```
+Memeriksa apakah NPC dapat mendengar pemain. Status pendengaran diatur false terlebih dahulu, kemudian script mengambil komponen PlayerController dari objek pemain. Jika pemain tidak memiliki komponen tersebut, fungsi dihentikan. Jika pemain sedang crouch, NPC tidak mendeteksi suara pemain.
+
+```
+float distanceToPlayer =
+    Vector3.Distance(
+        transform.position,
+        player.position
+    );
+
+if (distanceToPlayer <= hearingRadius)
+{
+    CanHearPlayer = true;
+}
+```
+Jarak NPC dan pemain dihitung menggunakan Vector3.Distance(). Jika jaraknya kurang dari atau sama dengan hearingRadius dan pemain tidak crouch, CanHearPlayer diatur menjadi true.
+
+```
+private void OnDrawGizmosSelected()
+{
+    Gizmos.color = Color.yellow;
+    Gizmos.DrawWireSphere(
+        transform.position,
+        viewRadius
+    );
+
+    Gizmos.color = Color.cyan;
+    Gizmos.DrawWireSphere(
+        transform.position,
+        hearingRadius
+    );
+
+    if (player != null && CanSeePlayer)
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(
+            transform.position +
+            Vector3.up * eyeHeight,
+            player.position +
+            Vector3.up * 0.5f
+        );
+    }
+}
+```
+Menampilkan visualisasi sensor NPC pada Scene View Unity ketika GameObject dipilih.
+- Lingkaran kuning menunjukkan radius penglihatan.
+- Lingkaran cyan menunjukkan radius pendengaran.
+- Terdapat juga garis batas field of view yang digambar menggunakan DirectionFromAngle() dan Gizmos.DrawLine(). Garis tersebut membantu menunjukkan arah batas kiri dan kanan penglihatan NPC.
+- Jika pemain sedang terlihat, garis merah digambar dari posisi mata NPC menuju pemain.
+
+```
+private Vector3 DirectionFromAngle(float angle)
+{
+    float finalAngle =
+        transform.eulerAngles.y + angle;
+
+    return new Vector3(
+        Mathf.Sin(finalAngle * Mathf.Deg2Rad),
+        0f,
+        Mathf.Cos(finalAngle * Mathf.Deg2Rad)
+    );
+}
+```
+Mengubah nilai sudut menjadi vector arah 3D yang digunakan untuk menggambar batas field of view. transform.eulerAngles.y digunakan sebagai arah rotasi horizontal NPC, kemudian ditambahkan dengan sudut yang diberikan. Mathf.Sin() dan Mathf.Cos() digunakan untuk menghitung komponen X dan Z dari vector arah. Mathf.Deg2Rad mengubah satuan derajat menjadi radian karena fungsi trigonometri Unity menggunakan radian.
 
 ##  3. `PlayerController`
 ```
+public class PlayerController : MonoBehaviour
+{
+    [Header("Movement Settings")]
+    [SerializeField] private float moveSpeed = 5f;
+
+    [Header("Rotation Settings")]
+    [SerializeField] private float rotationSpeed = 10f;
+
+    [Header("Camera Reference")]
+    [SerializeField] private Transform cameraTarget;
+
+    [Header("Crouch Settings")]
+    [SerializeField] private float crouchSpeed = 2f;
+
+    private bool isCrouching;
+    public bool IsCrouching => isCrouching;
+```
+Mendefinisikan variabel untuk mengatur pergerakan, rotasi, referensi kamera, dan kondisi crouch pemain.
+- moveSpeed: Kecepatan gerak normal pemain dengan nilai awal 5.
+- rotationSpeed: Kecepatan perubahan rotasi pemain agar dapat menghadap arah gerak.
+- cameraTarget: Referensi Transform kamera yang digunakan untuk menentukan arah gerak relatif terhadap kamera.
+- crouchSpeed: Kecepatan gerak ketika pemain crouch, yaitu 2.
+- isCrouching: Menyimpan status apakah pemain sedang crouch.
+- IsCrouching: Property untuk membaca status crouch dari script lain.
 
 ```
+private void Update()
+{
+    isCrouching = Input.GetKey(KeyCode.LeftControl);
+
+    MovePlayer();
+}
+```
+Update() dijalankan setiap frame. Fungsi ini memeriksa apakah tombol CTRL kiri sedang ditekan menggunakan Input.GetKey(). Jika tombol ditekan, isCrouching bernilai true dan pemain menggunakan kecepatan crouch. Setelah itu, MovePlayer() dipanggil untuk memproses pergerakan.
+
+```
+private void MovePlayer()
+{
+    float horizontal = Input.GetAxisRaw("Horizontal");
+    float vertical = Input.GetAxisRaw("Vertical");
+
+    float currentSpeed =
+        isCrouching
+        ? crouchSpeed
+        : moveSpeed;
+```
+Input.GetAxisRaw() membaca input keyboard pada axis horizontal dan vertical, umumnya menggunakan tombol A/D dan W/S. Operator ternary menentukan kecepatan berdasarkan kondisi crouch:
+- Jika crouch, menggunakan crouchSpeed.
+- Jika tidak crouch, menggunakan moveSpeed.
+
+```
+Vector3 inputDirection =
+    new Vector3(horizontal, 0f, vertical).normalized;
+
+if (inputDirection == Vector3.zero)
+    return;
+```
+Input keyboard diubah menjadi vector arah 3D. Komponen Y bernilai 0 agar gerakan dilakukan pada bidang horizontal. .normalized digunakan untuk menjaga panjang vector tetap 1, sedangkan return menghentikan fungsi jika tidak ada input gerak.
+
+```
+Vector3 camForward = cameraTarget.forward;
+Vector3 camRight = cameraTarget.right;
+
+camForward.y = 0f;
+camRight.y = 0f;
+
+camForward.Normalize();
+camRight.Normalize();
+
+Vector3 movement =
+    camForward * inputDirection.z +
+    camRight * inputDirection.x;
+
+movement.Normalize();
+```
+Mengambil arah depan dan kanan kamera sebagai acuan gerak pemain. Komponen Y diatur menjadi 0 agar rotasi vertikal kamera tidak memengaruhi pergerakan karakter. Setelah itu, vector dinormalisasi untuk menjaga panjangnya tetap 1. Arah depan dan kanan kamera digabungkan dengan input pemain untuk menghasilkan arah gerak akhir. Dengan cara ini, pemain bergerak relatif terhadap arah kamera.
+
+```
+transform.position +=
+    movement *
+    currentSpeed *
+    Time.deltaTime;
+```
+Posisi pemain diperbarui berdasarkan arah gerak, kecepatan, dan waktu. Time.deltaTime digunakan agar pergerakan lebih konsisten pada frame rate yang berbeda.
+
+```
+Quaternion targetRotation =
+    Quaternion.LookRotation(movement);
+
+transform.rotation =
+    Quaternion.Slerp(
+        transform.rotation,
+        targetRotation,
+        rotationSpeed * Time.deltaTime
+    );
+```
+Quaternion.LookRotation() menghasilkan rotasi yang menghadap arah gerak pemain. Kemudian, Quaternion.Slerp() digunakan untuk mengubah rotasi secara halus dari rotasi saat ini menuju rotasi tujuan. Hal ini membuat karakter tidak langsung berputar secara kaku ketika arah geraknya berubah.
