@@ -2,8 +2,6 @@
 
 **Kelompok 14:** kata Jorell We <3 Unity
 
----
-
 ## Anggota Kelompok
 
 | No | Nama | NRP |
