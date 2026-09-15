@@ -17,6 +17,15 @@
 ##  1. `CameraTargetFollow`
 Script ini berfungsi untuk mengontrol pergerakan kamera utama agar selalu mengikuti posisi objek player secara konsisten dengan memberikan *offset* ketinggian vertikal.
 
+---
+
+### <ins> Parameter & Variabel </ins>
+| Nama Variabel | Tipe Data | Akses | Deskripsi |
+|---|---|---|---|
+| `player` | `Transform` | `public` | Referensi komponen `Transform` milik objek Player yang akan diikuti |
+
+---
+
 ### <ins> Kode </ins>
 ```csharp
 using UnityEngine;
