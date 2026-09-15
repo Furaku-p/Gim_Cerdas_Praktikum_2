@@ -14,4 +14,4 @@
 
 ---
 
-## 🎥 1. `CameraTargetFollow.cs`
+##  1. `CameraTargetFollow.cs`
