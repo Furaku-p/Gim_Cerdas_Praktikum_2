@@ -1,8 +1,6 @@
 # Laporan Praktikum 2 - Game Cerdas
 
-**Kelompok 14:** kata Jorell We <3 Unity
-
----
+## **Kelompok 14:** kata Jorell We <3 Unity
 
 ## Anggota Kelompok
 
