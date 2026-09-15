@@ -47,6 +47,8 @@ public class CameraTargetFollow : MonoBehaviour
    ```
    Posisi kamera disesuaikan dengan posisi player ditambah offset `1.5` unit ke arah atas (`Vector3.up`).
 
+---
+
 ## 2. `NPCBrain`
 Script ini merupakan otak pengendali utama kecerdasan buatan (AI) NPC Guard. Script ini menangani sensor, pengambilan keputusan, serta eksekusi aksi pergerakan NPC.
 
