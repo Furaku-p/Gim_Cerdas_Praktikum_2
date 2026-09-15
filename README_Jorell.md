@@ -1,6 +1,6 @@
 # Laporan Praktikum 2 - Game Cerdas
 
-**Nama Tim:** kata Jorell We <3 Unity
+**Kelompok:** kata Jorell We <3 Unity
 
 ---
 
