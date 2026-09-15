@@ -53,14 +53,14 @@ public class CameraTargetFollow : MonoBehaviour
 
 ---
 
-### Demo / Tampilan Hasil
+### <ins> Demo / Tampilan Hasil </ins>
 *(Tambahkan Screenshot atau GIF animasi kamera mengikuti player di sini)*  
 `![Demo Camera Follow](docs/images/camera_follow_demo.gif)`
 
 ---
 
 ## 2. `NPCBrain`
-Script ini merupakan otak pengendali utama kecerdasan buatan (AI) NPC Guard yang mengimplementasikan **Finite State Machine (FSM)**. Script ini menangani penginderaan (*sensing* penglihatan dan pendengaran), pengambilan keputusan (*decision making*), serta eksekusi aksi pergerakan NPC.
+Script ini merupakan otak pengendali utama kecerdasan buatan (AI) NPC Guard. Script ini menangani sensor, pengambilan keputusan, serta eksekusi aksi pergerakan NPC.
 
 #### Parameter & Variabel
 | Nama Variabel | Tipe Data | Akses | Deskripsi |
@@ -81,16 +81,13 @@ Script ini merupakan otak pengendali utama kecerdasan buatan (AI) NPC Guard yang
 
 ---
 
-### <ins> 2.1 Overview Finite State Machine (FSM) </ins>
+### <ins> 2.1 Overview State NPC </ins>
 NPC Guard memiliki 3 status utama (`NPCState`):
 - **Patrol**: NPC mengitari rute titik patroli (*waypoint*) secara berurutan.
 - **Chase**: NPC mengejar player secara aktif ketika player terlihat oleh sensor penglihatan.
 - **Search**: NPC bergerak menuju dan memeriksa lokasi terakhir player terdeteksi (*last known position*).
 
 ```
-                 ┌────────────────────────────────┐
-                 │    [Player Terlihat]           │
-                 ▼                                │
            ┌──────────┐  [Player Terlihat]  ┌──────────┐
            │  PATROL  │────────────────────►│  CHASE   │
            └──────────┘                     └──────────┘
@@ -103,7 +100,7 @@ NPC Guard memiliki 3 status utama (`NPCState`):
 
 ---
 
-### <ins> 2.2 Inisialisasi & Loop Utama (`Start` & `Update`) </ins>
+### <ins> 2.2 Inisialisasi & Loop Utama </ins>
 Method `Start()` menginisialisasi state awal ke `Patrol` dan mengarahkan NPC ke titik patroli pertama.  
 Method `Update()` memanggil 4 fungsi utama setiap *frame* secara berurutan:
 
@@ -126,7 +123,7 @@ private void Update()
 
 ---
 
-### <ins> 2.3 Sistem Penginderaan & Memori (`UpdateMemory`) </ins>
+### <ins> 2.3 Sistem Sensor & Memori </ins>
 NPC memperbarui koordinat posisi terakhir player (`lastKnownPosition`) berdasarkan dua sensor:
 1. **Penglihatan (`sensor.CanSeePlayer`)**: Menyimpan posisi player saat terlihat.
 2. **Pendengaran (`sensor.CanHearPlayer` - Challenge 4)**: Menyimpan posisi suara player saat terdengar.
@@ -150,7 +147,7 @@ private void UpdateMemory()
 
 ---
 
-### <ins> 2.4 Logika Pengambilan Keputusan (`MakeDecision` & `ChangeState`) </ins>
+### <ins> 2.4 Logika Pengambilan Keputusan </ins>
 Proses pengambilan keputusan dievaluasi berdasarkan urutan prioritas:
 1. **Prioritas 1 (Chase)**: Jika player terlihat (`sensor.CanSeePlayer`), ubah state ke `Chase`.
 2. **Prioritas 2 (Search via Suara - Challenge 4)**: Jika player terdengar (`sensor.CanHearPlayer`), setel `searchTimer = searchDuration` dan ubah state ke `Search`.
@@ -192,7 +189,7 @@ Fungsi `ChangeState()` menangani perubahan state, mencetak log ke console, dan m
 
 ---
 
-### <ins> 2.5 Eksekusi Perilaku State & Fitur Challenge </ins>
+### <ins> 2.5 Eksekusi Perilaku State & Challenge </ins>
 
 #### 2.5.1 State Patrol & Jeda Waypoint (Challenge 1)
 Pada state `Patrol`, NPC bergerak menuju titik patroli menggunakan `patrolSpeed`. Ketika mencapai titik target (jarak sisa $\le$ `waypointTolerance`), NPC akan berhenti sejenak selama `waitTimeAtWaypoint` (2 detik) sebelum beralih ke titik berikutnya.
@@ -237,8 +234,8 @@ private void Chase()
 }
 ```
 
-#### 2.5.3 State Search & Rotasi Geleng Kepala (Challenge 2)
-Pada state `Search`, NPC bergerak menuju `lastKnownPosition`. Setelah tiba di lokasi tersebut, NPC menghentikan navigasi dan mulai menggelengkan kepala (rotasi kiri-kanan secara bergantian) menggunakan `searchRotationSpeed` (`90f`) hingga durasi `searchTimer` habis.
+#### 2.5.3 State Search & Rotasi Melihat Kiri-Kanan (Challenge 2)
+Pada state `Search`, NPC bergerak menuju `lastKnownPosition`. Setelah tiba di lokasi tersebut, NPC menghentikan navigasi dan mulai nelihat kiri-kanan menggunakan `searchRotationSpeed` (`90f`) hingga durasi `searchTimer` habis.
 
 ```csharp
 private void Search()
@@ -268,7 +265,7 @@ private void Search()
 
 ---
 
-### <ins> 2.6 Indikator Visual UI (Challenge 3) </ins>
+### <ins> 2.6 Indikator Alert (Challenge 3) </ins>
 Fungsi `UpdateIndicators()` mengatur aktif/tidaknya ikon indikator visual di atas kepala NPC:
 - `alertExclamation` (`!`): Aktif hanya saat state **`Chase`**.
 - `alertQuestion` (`?`): Aktif hanya saat state **`Search`**.
@@ -286,7 +283,7 @@ private void UpdateIndicators()
 
 ---
 
-### <ins> 2.7 Debugging & Gizmos Scene View </ins>
+### <ins> 2.7 Gizmos </ins>
 Method `OnDrawGizmosSelected()` menggambar indikator lingkaran berwarna pada Scene View Unity sesuai state aktif:
 - **Hijau**: State `Patrol`
 - **Merah**: State `Chase`
@@ -315,7 +312,7 @@ private void OnDrawGizmosSelected()
 
 ---
 
-### <ins> 2.8 Kode Lengkap `NPCBrain.cs` </ins>
+### <ins> 2.8 Kode Lengkap </ins>
 
 <details>
 <summary><b>Klik untuk melihat kode lengkap NPCBrain.cs</b></summary>
